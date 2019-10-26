@@ -1,5 +1,5 @@
 
-function Enemy(x, y, cost) {
+function Enemy(x, y, cost) { //cost is responsible for typing enemies
   this.cost = cost;
   this.x = x;
   this.y = y;
@@ -28,7 +28,7 @@ function Enemy(x, y, cost) {
       }
     }
   }
-  this.collide = function() {
+  this.collide = function() {  //collision detection 
     for (var i = 0; i < bullets.length; i++) {
       if (bullets[i].x + 1 > this.x && bullets[i].x  + 1< this.x + 50 && bullets[i].y > this.y && bullets[i].y < this.y + 20) {
         this.health--;
