@@ -23,7 +23,7 @@ function Player() {
       this.xspeed = 0;
     }
   }
-  this.collide = function(){
+  this.collide = function(){ //collision detection with enemyBullets
     for(var i = 0; i < enemyBullets.length; i++){
       if(enemyBullets[i].x > this.x && enemyBullets[i].x < this.x + goodImg.width/10 && enemyBullets[i].y + 30 === this.y){
         enemyBullets.splice(i,1);
