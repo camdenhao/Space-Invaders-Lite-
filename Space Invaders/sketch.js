@@ -1,22 +1,21 @@
 var player;
 var wave;
-var globalHealth;
-let bullets = [];
-let enemyBullets = []; 
-let fired = false;
-let nextWave = false;
-let restarted = false; 
-let started = false; 
-let enemies = [];
-let eightBit;
-var time;
-var wave1;
+var globalHealth; //player health
+var time; 
 var waveCounter;
 var goodImg;
 var badImg;
 var numBullets;
 var bulletRate; 
 var lost;
+let bullets = [];
+let enemyBullets = []; 
+let enemies = [];
+let fired = false;     //booleans responsible for single key presses - prevents holding down key 
+let nextWave = false;
+let restarted = false; 
+let started = false; 
+let eightBit; //font
 function preload(){
   eightBit = loadFont('PressStart2P.ttf');
 }
@@ -44,7 +43,7 @@ function draw() {
   text('Wave:' + waveCounter, 10 , 45);
   text('Health:' + globalHealth, 10, 20)
   text('Ammo: ' + numBullets, 10, 70);
-  if(frameCount % 60 === 0){
+  if(frameCount % 60 === 0){      //uses frames for tracking time
     for (var i = 0; i < enemies.length; i++){
       enemies[i].changeDir(); 
     }
@@ -62,7 +61,7 @@ function draw() {
       enemies[i].xspeed = -1;
     }
   }
-  if(frameCount % (floor(floor(180 / enemies.length)/(.25 * pow(waveCounter,2)))) === 0){
+  if(frameCount % (floor(floor(180 / enemies.length)/(.1 * pow(waveCounter,2)))) === 0){  //exponential growth of enemy firing rate
     if(enemies.length > 0){
       var tempPoint = floor(random(enemies.length));
       enemyBullets.push(new badBullet(enemies[tempPoint].x + 25, enemies[tempPoint].y + 20));
@@ -76,7 +75,7 @@ function draw() {
       tempY = enemies[i].y;
       tempCost = enemies[i].cost
       enemies.splice(i, 1);
-      if(tempCost === 10){
+      if(tempCost === 3){    //type 3 enemies split into 2 type 1 enemies
         enemies.push(new Enemy(tempX, tempY, 1));
         enemies.push(new Enemy(tempX, tempY + 75, 1));
       }
@@ -121,7 +120,7 @@ function draw() {
 
 
 
-function keyPress() {
+function keyPress() {               
   if (keyCode === 32 && fired === false && numBullets > 0) {
     bullets.push(new Bullet(player.center, player.y));
     numBullets--;
@@ -185,18 +184,21 @@ function Bullet(x, y) {
 
 
 
-function Wave(x) {
-  var limit = 10 + floor(.25 * pow(x, 2));
-  var counter = 0;
-  var costs = [1,5,10];
-  while (counter < limit) {  //exponential wave growth
-   var temp = costs[floor(random(3))];
-   enemies.push(new Enemy(random(570), random(200), temp)); //randomization of each wave 
-   counter = counter + temp;
+function Wave(x) {  //fills up wave with random assortment of enemies below a total "cost" 
+  limit = 9 + floor(.25 * pow(x, 2));  //exponential wave growth
+  counter = 0;
+  costs = [1,2,3];
+  while (counter < limit) { 
+   temp = costs[floor(random(3))];
+   console.log(temp);
+   if(temp + counter <= limit){
+    enemies.push(new Enemy(random(570), random(200), temp)); //randomization of each wave 
+    counter = counter + temp;
+   }
   }
 }
 
-function spawnPoints() {
+function spawnPoints() {   //assigns enemy spawn points in an array
   var enemyIndex = 0;
   for(var i = 0; i < 4; i++){
    for(var j = 0; j < 5; j++){
